@@ -1,0 +1,27 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "equator_window": 520,
+  "rolling_window": 6240,
+  "total_samples": 168173,
+  "bins": {
+    "50/50 (Total Equilibrio)": 46665,
+    "60/40 (Tendencia Leve)": 83014,
+    "70/30 (Tendencia Forte)": 35787,
+    "80/20 (Tendencia Extrema)": 2707,
+    "90/10 (Supernova)": 0
+  },
+  "pct_bins": {
+    "50/50 (Total Equilibrio)": 27.748211662989895,
+    "60/40 (Tendencia Leve)": 49.36226385924019,
+    "70/30 (Tendencia Forte)": 21.279872512234423,
+    "80/20 (Tendencia Extrema)": 1.6096519655354902,
+    "90/10 (Supernova)": 0.0
+  }
+}

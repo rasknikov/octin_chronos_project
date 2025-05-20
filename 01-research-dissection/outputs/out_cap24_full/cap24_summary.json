@@ -1,0 +1,53 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "thresholds": [
+    15.0,
+    100.0,
+    500.0
+  ],
+  "rows": [
+    {
+      "threshold_pips": 15.0,
+      "count": 61022,
+      "pips_up_pct": 50.10706092579396,
+      "pips_down_pct": 49.89293907420605,
+      "hours_up_pct": 50.36757560166924,
+      "hours_down_pct": 49.63242439833076,
+      "joules_time_up_pct": 50.30750841356033,
+      "joules_time_down_pct": 49.692491586439665,
+      "joules_tick_up_pct": 49.74226378657177,
+      "joules_tick_down_pct": 50.25773621342823
+    },
+    {
+      "threshold_pips": 100.0,
+      "count": 4684,
+      "pips_up_pct": 50.303733673952834,
+      "pips_down_pct": 49.696266326047166,
+      "hours_up_pct": 49.87505218072544,
+      "hours_down_pct": 50.12494781927456,
+      "joules_time_up_pct": 49.341589613749,
+      "joules_time_down_pct": 50.658410386251,
+      "joules_tick_up_pct": 45.588456470932734,
+      "joules_tick_down_pct": 54.41154352906725
+    },
+    {
+      "threshold_pips": 500.0,
+      "count": 239,
+      "pips_up_pct": 51.27548297992832,
+      "pips_down_pct": 48.72451702007168,
+      "hours_up_pct": 50.515398393713525,
+      "hours_down_pct": 49.484601606286475,
+      "joules_time_up_pct": 48.71524210445202,
+      "joules_time_down_pct": 51.28475789554797,
+      "joules_tick_up_pct": 34.218742942251225,
+      "joules_tick_down_pct": 65.78125705774877
+    }
+  ]
+}

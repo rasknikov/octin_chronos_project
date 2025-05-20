@@ -1,0 +1,41 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "params": {
+    "min_swing_pips": 15.0,
+    "reversion_target": 0.9,
+    "max_lookahead": 2000
+  },
+  "summary": [
+    {
+      "group": "pena_quartil",
+      "count": 6724,
+      "win_rate": 99.68768590124925,
+      "t_exp_med": 1.0,
+      "t_rev_med": 2.0,
+      "ratio": 2.0
+    },
+    {
+      "group": "pedra_medio",
+      "count": 13450,
+      "win_rate": 98.18587360594796,
+      "t_exp_med": 4.0,
+      "t_rev_med": 4.0,
+      "ratio": 1.0
+    },
+    {
+      "group": "bigorna_quartil",
+      "count": 6725,
+      "win_rate": 91.89591078066914,
+      "t_exp_med": 12.0,
+      "t_rev_med": 29.0,
+      "ratio": 2.4166666666666665
+    }
+  ]
+}

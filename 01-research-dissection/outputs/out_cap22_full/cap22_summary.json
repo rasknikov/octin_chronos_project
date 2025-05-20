@@ -1,0 +1,19 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "orbit_window": 520,
+  "hp_lambda": 10000000000.0,
+  "r2_hp": 0.9860477576289681,
+  "orbit_sma": {
+    "r2_orbit": 0.9703916721565079,
+    "r2_rigid": 0.9704267874501652,
+    "r2_mass": 0.9704308043310109,
+    "n": 174413
+  }
+}

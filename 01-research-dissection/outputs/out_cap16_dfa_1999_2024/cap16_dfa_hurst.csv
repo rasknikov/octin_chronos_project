@@ -1,0 +1,5 @@
+scope,min_scale,max_scale,hurst,class
+micro_intraday,2,24,0.5698081327216324,trending
+swing_semanal,24,120,0.4973557695814223,random_walk
+fissura_mensal,120,520,0.4968529584576547,random_walk
+macro_orbita,520,6240,0.5040437120995251,random_walk

@@ -1,0 +1,73 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "hourly_symmetry": {
+    "hours_up": 85993,
+    "hours_down": 85130,
+    "hours_flat": 3809,
+    "pips_up": 928144.1,
+    "pips_down": 921836.6,
+    "edge_time": 1.010137436861271,
+    "edge_space": 1.0068423189098805
+  },
+  "zigzag_thresholds": [
+    {
+      "count_legs": 20293,
+      "legs_up": 10147,
+      "legs_down": 10146,
+      "pips_up": 699388.9,
+      "pips_down": 693020.6,
+      "hours_up": 88044,
+      "hours_down": 86842,
+      "edge_legs": 1.0000985610092648,
+      "edge_pips": 1.0091891929330816,
+      "edge_hours": 1.0138412288984593,
+      "threshold_pips": 20.0
+    },
+    {
+      "count_legs": 6983,
+      "legs_up": 3492,
+      "legs_down": 3491,
+      "pips_up": 495820.70000000007,
+      "pips_down": 489452.4,
+      "hours_up": 87565,
+      "hours_down": 87321,
+      "edge_legs": 1.000286450873675,
+      "edge_pips": 1.013011071148083,
+      "edge_hours": 1.0027942877429254,
+      "threshold_pips": 50.0
+    },
+    {
+      "count_legs": 2789,
+      "legs_up": 1395,
+      "legs_down": 1394,
+      "pips_up": 351071.4,
+      "pips_down": 344635.3,
+      "hours_up": 88166,
+      "hours_down": 86565,
+      "edge_legs": 1.0007173601147776,
+      "edge_pips": 1.018675103798131,
+      "edge_hours": 1.0184947727141453,
+      "threshold_pips": 100.0
+    },
+    {
+      "count_legs": 942,
+      "legs_up": 471,
+      "legs_down": 471,
+      "pips_up": 225780.0,
+      "pips_down": 219675.60000000003,
+      "hours_up": 90210,
+      "hours_down": 83693,
+      "edge_legs": 1.0,
+      "edge_pips": 1.0277882477616993,
+      "edge_hours": 1.0778679220484388,
+      "threshold_pips": 200.0
+    }
+  ]
+}

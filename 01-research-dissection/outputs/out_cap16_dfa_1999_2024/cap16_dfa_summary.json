@@ -1,0 +1,53 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 161455,
+    "start": "1999-01-04 10:00:00",
+    "end": "2024-12-31 00:00:00",
+    "filter_start": "1999-01-04",
+    "filter_end": "2024-12-31"
+  },
+  "macro_removal": {
+    "periods_years": [
+      23.70568174486774,
+      13.157713834487616,
+      5.129856495943647
+    ],
+    "auto_search_r2_sample": 0.8309332141621567,
+    "r2_macro_fit": 0.8309074052082466
+  },
+  "dfa": {
+    "scales": 12,
+    "order": 1
+  },
+  "hurst": [
+    {
+      "scope": "micro_intraday",
+      "min_scale": 2,
+      "max_scale": 24,
+      "hurst": 0.5698081327216324,
+      "class": "trending"
+    },
+    {
+      "scope": "swing_semanal",
+      "min_scale": 24,
+      "max_scale": 120,
+      "hurst": 0.4973557695814223,
+      "class": "random_walk"
+    },
+    {
+      "scope": "fissura_mensal",
+      "min_scale": 120,
+      "max_scale": 520,
+      "hurst": 0.4968529584576547,
+      "class": "random_walk"
+    },
+    {
+      "scope": "macro_orbita",
+      "min_scale": 520,
+      "max_scale": 6240,
+      "hurst": 0.5040437120995251,
+      "class": "random_walk"
+    }
+  ]
+}

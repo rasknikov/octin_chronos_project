@@ -1,0 +1,61 @@
+{
+  "dataset": {
+    "path": "01_DATALAKE\\eurusd_h1_ohlc.csv",
+    "rows": 174932,
+    "start": "1971-01-04 00:00:00",
+    "end": "2026-01-08 01:00:00",
+    "filter_start": null,
+    "filter_end": null
+  },
+  "tri_pendulum": {
+    "auto_periods": true,
+    "auto_search_r2_sample": 0.7033562250833141,
+    "periods_years": [
+      23.70568174486774,
+      14.801810481415421,
+      4.56006269438193
+    ],
+    "r2_close": 0.7036341392409434,
+    "amps": [
+      0.16026771099367543,
+      0.09409157521463803,
+      0.04032414371117015
+    ],
+    "phases": [
+      -2.9009766922501337,
+      -1.6102275786056268,
+      -0.030448206250075424
+    ]
+  },
+  "tri_pendulum_hp": {
+    "hp_lambda": 10000000000.0,
+    "r2_hp_only": 0.9860477569773667,
+    "r2_hp_plus_tri": 0.9860876042530909,
+    "auto_periods_hp": true,
+    "auto_search_r2_sample_hp": 0.06629078250080711,
+    "periods_years_hp": [
+      8.21566697144023,
+      7.30311978425798,
+      6.491932884892782
+    ],
+    "r2_hp_plus_tri_auto": 0.9869731782418824
+  },
+  "mass_deformed_sine": {
+    "r2_orbit": 0.9703916721565079,
+    "r2_rigid": 0.9704267874501653,
+    "r2_mass": 0.9704299646936947,
+    "n": 174413
+  },
+  "xxvii_theory_of_everything": {
+    "anchor": 1.13677,
+    "r2": 0.5687264466443656,
+    "sample_step": 4,
+    "n": 43733
+  },
+  "xxviii_relativistic_fiduciary": {
+    "hp_lambda": 10000000000.0,
+    "r2": 0.9503607542592825,
+    "sample_step": 4,
+    "n": 43733
+  }
+}

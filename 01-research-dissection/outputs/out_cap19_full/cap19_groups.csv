@@ -1,0 +1,4 @@
+group,count,win_rate,t_exp_med,t_rev_med,ratio
+pena_quartil,6724,99.68768590124925,1.0,2.0,2.0
+pedra_medio,13450,98.18587360594796,4.0,4.0,1.0
+bigorna_quartil,6725,91.89591078066914,12.0,29.0,2.4166666666666665
