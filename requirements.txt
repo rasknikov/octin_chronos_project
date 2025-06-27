@@ -1,0 +1,4 @@
+# Core scientific stack
+numpy
+pandas
+scipy
