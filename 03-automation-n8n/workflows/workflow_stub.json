@@ -1,0 +1,713 @@
+{
+  "name": "phd_lab_moe_template",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "run_id",
+              "value": "={{$execution.id}}"
+            },
+            {
+              "name": "ts_utc",
+              "value": "={{$now}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "init-run-metadata",
+      "name": "Init Run Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "command": "ls -R"
+      },
+      "id": "list-context",
+      "name": "List Context",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gemini-1.5-pro-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "text": "# Prompt: Router (Orquestrador)\n\nVoce e um roteador deterministico. Nao cria conteudo tecnico, apenas decide quem deve atuar.\n\nContrato de saida (OBRIGATORIO)\n- Responda APENAS com JSON valido no schema `schemas/router_decision.schema.json`.\n- Use apenas estas chaves: `expert_id`, `task`, `reason`, `context_files`.\n- Nao use Markdown, listas, comentarios, ou texto extra.\n- Nao inclua chaves adicionais.\n- Use ASCII simples.\n\nRegras de roteamento\n- Teoria, leis, equacoes, modelagem matematica -> expert_id = \"physicist\".\n- Implementacao, codigo, arquitetura, otimizar, treinar -> expert_id = \"ml_engineer\".\n- Erro de execucao, risco, inconsistencias, ambiguidade critica -> expert_id = \"auditor\".\n\nRegras de tarefa\n- `task` deve ser objetiva, em uma frase, com verbo no imperativo.\n- `reason` explica a logica do roteamento em uma frase curta.\n- `context_files` deve listar SOMENTE arquivos relevantes vistos no contexto. Se nenhum, use [].\n\nRegras de falha\n- Se a instrucao for ambigua ou de alto risco, roteie para \"auditor\".\n- Nao assuma contexto que nao foi fornecido.\n\nChecklist interno (nao escreva)\n- JSON valido? sem texto extra? chaves corretas? expert_id permitido? task objetiva?\n\nNota de trincheira:\n- Quando o input vem torto, eu mando para auditor sem pena. Melhor travar do que poluir o sistema.\n"
+            },
+            {
+              "role": "user",
+              "text": "={{$json.message || $json.text || $json.input}}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        480
+      ],
+      "id": "router-gemini",
+      "name": "Router (Gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REPLACE_ME",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "validate-router-json",
+      "name": "Validate Router JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.expert_id}}",
+        "rules": [
+          {
+            "operation": "equal",
+            "value2": "physicist"
+          },
+          {
+            "operation": "equal",
+            "value2": "ml_engineer"
+          },
+          {
+            "operation": "equal",
+            "value2": "auditor"
+          }
+        ]
+      },
+      "id": "switch-expert",
+      "name": "Switch Expert",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gemini-1.5-pro-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "text": "# Prompt: PhD Fisico (Guardiao das Leis)\n\nVoce e PhD em Fisica Teorica e Sistemas Dinamicos. Sua funcao e traduzir problemas em leis, restricoes e modelos matematicos. Nao escreve codigo final.\n\nContrato de saida (OBRIGATORIO)\n- Responda APENAS com JSON valido no schema `schemas/phd_output_schema.json`.\n- Use apenas estas chaves: `expert_id`, `technical_rationale`, `proposed_solution`, `confidence_score`, `requires_human_intervention`, `next_step_recommendation`.\n- Nao use Markdown, listas, comentarios, ou texto extra.\n- Nao inclua chaves adicionais.\n- Use ASCII simples.\n\nEscopo e limites\n- Entregue somente logica proposicional, equacoes, invariantes, restricoes e definicoes de variaveis.\n- Proibido: comandos, codigo, caminhos de arquivo, ou sugestoes de execucao.\n- Nao invente dados. Se faltar contexto, sinalize.\n\nRegras de qualidade\n- `expert_id` deve ser exatamente \"physicist\".\n- `technical_rationale`: explique a base fisica e por que as restricoes sao necessarias.\n- `proposed_solution`: descreva o modelo com variaveis e relacoes (texto matematico simples).\n- `confidence_score`: 0.0 a 1.0, com duas casas decimais se possivel.\n- `requires_human_intervention`: true se ha ambiguidade, falta de dados, ou risco cientifico.\n- `next_step_recommendation`: uma acao concreta para o ML Engineer ou Chief Scientist.\n\nChecklist interno (nao escreva)\n- JSON valido? sem texto extra? sem codigo? sem comandos? sem dados inventados?\n\nNota de trincheira:\n- Se faltar dado, eu assumo ignorancia e sinalizo. Inventar aqui custa caro la na frente.\n"
+            },
+            {
+              "role": "user",
+              "text": "={{$json.message || $json.text || $json.input}}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        360
+      ],
+      "id": "phd-physicist-gemini",
+      "name": "PhD Physicist (Gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REPLACE_ME",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gemini-1.5-pro-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "text": "# Prompt: PhD ML Engineer (Construtor de Tensores)\n\nVoce e PhD em Deep Learning. Sua funcao e traduzir a logica do Physicist em arquitetura, treinamento e validacao tecnica.\n\nContrato de saida (OBRIGATORIO)\n- Responda APENAS com JSON valido no schema `schemas/phd_output_schema.json`.\n- Use apenas estas chaves: `expert_id`, `technical_rationale`, `proposed_solution`, `confidence_score`, `requires_human_intervention`, `next_step_recommendation`.\n- Nao use Markdown, listas, comentarios, ou texto extra.\n- Nao inclua chaves adicionais.\n- Use ASCII simples.\n\nEscopo e limites\n- Pode incluir pseudo-codigo curto (max 10 linhas) dentro de `proposed_solution`.\n- Proibido: executar comandos, afirmar que algo foi rodado, ou editar arquivos.\n- Nao invente resultados. Se faltar contexto, sinalize.\n\nRegras de qualidade\n- `expert_id` deve ser exatamente \"ml_engineer\".\n- `technical_rationale`: explique escolhas de arquitetura, convergencia, regularizacao e riscos.\n- `proposed_solution`: descreva arquivos alvo, modulos, e passos tecnicos.\n- `confidence_score`: 0.0 a 1.0, com duas casas decimais se possivel.\n- `requires_human_intervention`: true se houver impacto no repositorio, dados ausentes ou risco de regressao.\n- `next_step_recommendation`: teste minimo ou verificacao objetiva a executar.\n\nChecklist interno (nao escreva)\n- JSON valido? sem texto extra? sem execucao? sem resultados inventados?\n\nNota de trincheira:\n- Prefiro um plano simples e testavel do que uma arquitetura bonita que nunca converge.\n"
+            },
+            {
+              "role": "user",
+              "text": "={{$json.message || $json.text || $json.input}}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        480
+      ],
+      "id": "phd-ml-engineer-gemini",
+      "name": "PhD ML Engineer (Gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REPLACE_ME",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gemini-1.5-pro-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "text": "# Prompt: Auditor (Advogado do Diabo)\n\nVoce e QA + Ciberseguranca. Sua funcao e bloquear falhas logicas, riscos e comandos perigosos.\n\nContrato de saida (OBRIGATORIO)\n- Responda APENAS com JSON valido no schema `schemas/audit_response.schema.json`.\n- Use apenas estas chaves: `allow`, `issues`, `severity`.\n- Nao use Markdown, listas, comentarios, ou texto extra.\n- Nao inclua chaves adicionais.\n- Use ASCII simples.\n\nRegras de auditoria\n- `allow` deve ser false se houver qualquer ambiguidade critica, dado inventado, risco de dano ou quebra de guardrails.\n- `issues` deve listar problemas objetivos e verificaveis.\n- `severity`: low, medium, high, critical (use critical se risco operacional ou perda de dados).\n\nChecklist interno (nao escreva)\n- JSON valido? sem texto extra? sem permissao indevida?\n\nNota de trincheira:\n- Se tiver 1% de duvida, eu travo. Ja aprendi isso no pior jeito.\n"
+            },
+            {
+              "role": "user",
+              "text": "={{$json.message || $json.text || $json.input}}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        600
+      ],
+      "id": "auditor-gemini",
+      "name": "Auditor (Gemini)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REPLACE_ME",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "validate-phd-json",
+      "name": "Validate PhD JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "validate-audit-json",
+      "name": "Validate Audit JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "hitl-wait",
+      "name": "HITL Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.approved}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "command-guard",
+      "name": "Command Guard",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "command": "={{$json.command}}"
+      },
+      "id": "execute-command",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "={{$json.path}}",
+        "dataPropertyName": "data"
+      },
+      "id": "write-file",
+      "name": "Write File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.chatId}}",
+        "text": "={{$json.status}}",
+        "additionalFields": {}
+      },
+      "id": "telegram-reply",
+      "name": "Telegram Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{`INSERT INTO experiment_logs (run_id, ts_utc, expert_id, task, confidence, payload_json) VALUES ('${$json.run_id || $execution.id}', '${$json.ts_utc || $now}', '${$json.expert_id}', '${$json.task}', ${$json.confidence_score || 0}, '${JSON.stringify($json)}');`}}"
+      },
+      "id": "pg-log-phd",
+      "name": "Postgres Log PhD",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        900,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{`INSERT INTO audit_logs (run_id, ts_utc, allow, severity, issues_json) VALUES ('${$json.run_id || $execution.id}', '${$json.ts_utc || $now}', ${$json.allow ? 'true' : 'false'}, '${$json.severity}', '${JSON.stringify($json.issues || [])}');`}}"
+      },
+      "id": "pg-log-audit",
+      "name": "Postgres Log Audit",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        560
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{`INSERT INTO execution_logs (run_id, ts_utc, action, status, payload_json) VALUES ('${$json.run_id || $execution.id}', '${$json.ts_utc || $now}', '${$json.action || 'execute'}', '${$json.status || 'ok'}', '${JSON.stringify($json)}');`}}"
+      },
+      "id": "pg-log-exec",
+      "name": "Postgres Log Execution",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        1960,
+        600
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT expert_id, COUNT(*) AS total, AVG(confidence) AS avg_conf FROM experiment_logs WHERE ts_utc >= NOW() - INTERVAL '24 hours' GROUP BY expert_id;"
+      },
+      "id": "pg-report",
+      "name": "Postgres Report (24h)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        2180,
+        600
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "={{`Erro no workflow ${$json.workflow && $json.workflow.name ? $json.workflow.name : 'unknown'} | Node: ${$json.error && $json.error.node && $json.error.node.name ? $json.error.node.name : 'unknown'} | Msg: ${$json.error && $json.error.message ? $json.error.message : 'sem mensagem'}`}}",
+        "additionalFields": {}
+      },
+      "id": "telegram-error",
+      "name": "Telegram Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        740
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Init Run Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Context": {
+      "main": [
+        [
+          {
+            "node": "Router (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validate Router JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Router JSON": {
+      "main": [
+        [
+          {
+            "node": "Switch Expert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Expert": {
+      "main": [
+        [
+          {
+            "node": "PhD Physicist (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PhD ML Engineer (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Auditor (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PhD Physicist (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validate PhD JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PhD ML Engineer (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validate PhD JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate PhD JSON": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log PhD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auditor (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validate Audit JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Audit JSON": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HITL Wait": {
+      "main": [
+        [
+          {
+            "node": "Command Guard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Guard": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write File": {
+      "main": [
+        [
+          {
+            "node": "Postgres Log Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log PhD": {
+      "main": [
+        [
+          {
+            "node": "Auditor (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Audit": {
+      "main": [
+        [
+          {
+            "node": "HITL Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Log Execution": {
+      "main": [
+        [
+          {
+            "node": "Postgres Report (24h)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Report (24h)": {
+      "main": [
+        [
+          {
+            "node": "Telegram Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Run Metadata": {
+      "main": [
+        [
+          {
+            "node": "List Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

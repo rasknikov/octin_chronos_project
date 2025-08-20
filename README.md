@@ -45,13 +45,13 @@ Onde M e o eixo de massa intrinseca (cumsum de (High-Low) com direcao), e C_hp(M
 O paper completo desta fase esta em `paper_formalizacao/paper_completo.md`.
 
 ## Scripts e saidas
-- Cap XI: `paper_formalizacao/cap11_brownian_symmetry.py`
-- Cap XII: `paper_formalizacao/cap12_time_asymmetry.py`
-- Cap XIII-A: `paper_formalizacao/cap13a_tri_pendulum_suite.py`
-- Cap XVI: `paper_formalizacao/cap16_hurst_dfa.py`
-- Cap XVII: `paper_formalizacao/cap17_chron_inertia.py`
-- Cap XIX: `paper_formalizacao/cap19_low_mass_reactivity.py`
-- Cap XXII: `paper_formalizacao/cap22_dynamic_orbit.py`
-- Cap XXIV: `paper_formalizacao/cap24_thermo_debt.py`
+- Cap XI: `01-research-dissection/scripts/cap11_brownian_symmetry.py`
+- Cap XII: `01-research-dissection/cap12_time_asymmetry.py`
+- Cap XIII-A: `01-research-dissection/cap13a_tri_pendulum_suite.py`
+- Cap XVI: `01-research-dissection/cap16_hurst_dfa.py`
+- Cap XVII: `01-research-dissection/cap17_chron_inertia.py`
+- Cap XIX: `01-research-dissection/cap19_low_mass_reactivity.py`
+- Cap XXII: `01-research-dissection/cap22_dynamic_orbit.py`
+- Cap XXIV: `01-research-dissection/cap24_thermo_debt.py`
 
 Graficos e tabelas estao nos diretorios `paper_formalizacao/out_cap11_sweep`, `paper_formalizacao/out_cap12_full`, `paper_formalizacao/out_cap13a_full_auto_hp` e similares.
