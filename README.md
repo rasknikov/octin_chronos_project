@@ -15,6 +15,11 @@ Essa pesquisa começou em meados de 2024. O que você está lendo aqui é a sint
 - Tri-Pendulo com 3 senoides no tempo cronologico e 5 harmonicas no dominio da massa.
 - Zona morta no H1: residuo converge para H ~= 0.5 em escalas macro na janela oficial.
 - Matriz de inanicao: predominio de regimes 50/50 a 60/40; poucos regimes 80/20.
+- A formulacao no dominio da massa usa um eixo viajante C_hp(M) e cinco harmonicas senoidais:
+
+```math
+P(M) = C_{hp}(M) + \sum_{k=1}^{5} a_k \sin(\omega_k M + \phi_k)
+```
 
 ## Arquiteturas de IA (Fase 2)
 - Weierstrass PINN V2: decomposicao greedy em 8 camadas com EMA fase zero e modulacao por ATR.
