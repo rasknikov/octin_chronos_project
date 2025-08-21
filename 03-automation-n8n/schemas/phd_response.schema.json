@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "expert_id",
+    "technical_rationale",
+    "proposed_solution",
+    "confidence_score",
+    "requires_human_intervention",
+    "next_step_recommendation"
+  ],
+  "properties": {
+    "expert_id": {"type": "string", "enum": ["physicist", "ml_engineer"]},
+    "technical_rationale": {"type": "string"},
+    "proposed_solution": {"type": "string"},
+    "confidence_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "requires_human_intervention": {"type": "boolean"},
+    "next_step_recommendation": {"type": "string"}
+  }
+}

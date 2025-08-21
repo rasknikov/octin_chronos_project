@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["expert_id", "task", "reason", "context_files"],
+  "properties": {
+    "expert_id": {"type": "string", "enum": ["physicist", "ml_engineer", "auditor"]},
+    "task": {"type": "string"},
+    "reason": {"type": "string"},
+    "context_files": {"type": "array", "items": {"type": "string"}}
+  }
+}
