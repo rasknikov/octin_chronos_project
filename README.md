@@ -1,57 +1,36 @@
-# Projeto Chronos: Dissecacao Cinematica do EURUSD
-> Modelagem deterministica e analise de fase em series temporais financeiras (1971-2026).
+# Octin Chronos Project
+> Pesquisa aplicada em dinamica de sistemas, decomposicao senoidal e automacao de laboratorio multi-agente.
 
-Este repositorio documenta a Fase 1 de uma pesquisa profunda sobre inercia e gravidade orbital do EURUSD. O objetivo nao e construir uma estrategia de trade, e sim um estudo de caso de Processamento de Sinais e Dinamica de Sistemas. A pesquisa completa possui mais capitulos; aqui focamos apenas nos que sustentam a tese central, por isso a numeracao nao segue uma ordem completa.
+Este repositorio consolida tres frentes que se complementam: a disseccao matematica do EURUSD, as arquiteturas baselines de IA, e a automacao operacional via n8n. O foco e pesquisa e reproducibilidade, nao estrategia de trade.
 
-## Conceito central: A Fisica da Inercia Financeira
-O preco e tratado como um corpo fisico sujeito a duas forcas:
-- Deriva secular (a esteira): capturada pelo filtro Hodrick-Prescott com lambda = 1e10.
-- Oscilacao orbital (o bebado): modelada como superposicao de senoides e massas intrinsecas.
+Essa pesquisa começou em meados de 2024. O que você está lendo aqui é a sintetização de tudo o que deu certo e não deu nesses quase 2 anos de pesquisa, unido a uma dev cansada kkk
 
-A analogia do "Bebado na Esteira" resume a separacao entre tendencia lenta (HP) e movimento browniano (ruido), base de toda a disseccao.
+## O que tem aqui
+- `01-research-dissection`: paper e scripts da Fase 1 (disseccao cinetica do EURUSD).
+- `02-ai-architecture`: sintese das arquiteturas Weierstrass PINN V2 e Fractal FM SIREN V3.
+- `03-automation-n8n`: lab n8n com PhDs artificiais, HITL e trilhos de seguranca.
 
-## Equacao de Unificacao (XXVIII)
-A formulacao no dominio da massa usa um eixo viajante C_hp(M) e cinco harmonicas senoidais:
+## Principais resultados (Fase 1)
+- R2 = 0.9504 na Equacao de Unificacao (XXVIII) para a janela completa.
+- Tri-Pendulo com 3 senoides no tempo cronologico e 5 harmonicas no dominio da massa.
+- Zona morta no H1: residuo converge para H ~= 0.5 em escalas macro na janela oficial.
+- Matriz de inanicao: predominio de regimes 50/50 a 60/40; poucos regimes 80/20.
 
-```math
-P(M) = C_{hp}(M) + \sum_{k=1}^{5} a_k \sin(\omega_k M + \phi_k)
-```
+## Arquiteturas de IA (Fase 2)
+- Weierstrass PINN V2: decomposicao greedy em 8 camadas com EMA fase zero e modulacao por ATR.
+- Fractal FM SIREN V3: SIREN para fase, loss hibrida (MSE - beta * PearsonCorr).
+- Diagnostico: micro-ruido (L5-L8) domina e derruba previsao intraday; fase macro correta nao garante direcao curta.
 
-Onde M e o eixo de massa intrinseca (cumsum de (High-Low) com direcao), e C_hp(M) corrige o deslocamento secular do eixo gravitacional.
+## Automacao n8n (Lab de PhDs)
+- MoE com Router, Physicist, ML Engineer e Auditor.
+- HITL obrigatorio antes de executar qualquer acao.
+- Logs em Postgres com `run_id` e `ts_utc`.
+- Error Trigger com alerta no Telegram.
 
-## Principais resultados tecnicos
-- Fidelidade do modelo: R2 = 0.9504 (95.04% de variancia explicada) na Equacao de Unificacao (XXVIII), janela completa.
-- Tri-Pendulo: 3 senoides no tempo cronologico (periodos otimizados 23.7057, 14.8018, 4.5601 anos) e 5 harmonicas no dominio da massa.
-- Zona Morta (H1): o residuo apos remover a macroestrutura converge para H ~= 0.5 em escalas macro na janela oficial, indicando limite do determinismo linear.
-- Matriz de Inanicao: 77% do tempo em regimes 50/50 a 60/40 (zona do ruido), ~21% em 70/30, ~1.6% em 80/20.
+## Onde comecar
+1. Leia o paper principal: `01-research-dissection/paper/o_bebado_na_esteira.md`.
+2. Veja os baselines de IA: `02-ai-architecture/README.md`.
+3. Veja o lab n8n: `03-automation-n8n/README.md`.
 
-## Evidencias por capitulo
-- XI: Simetria estrutural quase perfeita em contagem de pernas; simetria espacial e temporal proximas de 1.0.
-- XII: Dominio estatistico de regimes 50/50 e 60/40 em janelas de 1 ano.
-- XIII-A: Tri-Pendulo relevante, mas HP domina o ajuste global; XXVIII supera XXVII com larga margem.
-- XVI: Elasticidade do tempo via DFA mostra fase trending no micro e enfraquecimento macro na janela oficial.
-- XVII: Hierarquia de massa cronologica extrema (macro >> micro).
-- XIX: Ondas leves revertem mais rapido e com maior acerto que ondas pesadas.
-- XXII: Orbita HP supera SMA-520; senoide deformada nao aumenta R2 global.
-- XXIV: Conservacao 50/50 valida para pips e tempo; falha quando energia e ponderada por volume.
-
-## Dataset
-- Fonte: `01_DATALAKE/eurusd_h1_ohlc.csv`
-- Linhas: 174,932 horas
-- Janela completa: 1971-01-04 a 2026-01-08 (FXPro, inclui pre-1999)
-- Janela oficial: 1999-01-04 a 2024-12-31
-
-## Documento principal
-O paper completo desta fase esta em `paper_formalizacao/paper_completo.md`.
-
-## Scripts e saidas
-- Cap XI: `01-research-dissection/scripts/cap11_brownian_symmetry.py`
-- Cap XII: `01-research-dissection/cap12_time_asymmetry.py`
-- Cap XIII-A: `01-research-dissection/cap13a_tri_pendulum_suite.py`
-- Cap XVI: `01-research-dissection/cap16_hurst_dfa.py`
-- Cap XVII: `01-research-dissection/cap17_chron_inertia.py`
-- Cap XIX: `01-research-dissection/cap19_low_mass_reactivity.py`
-- Cap XXII: `01-research-dissection/cap22_dynamic_orbit.py`
-- Cap XXIV: `01-research-dissection/cap24_thermo_debt.py`
-
-Graficos e tabelas estao nos diretorios `paper_formalizacao/out_cap11_sweep`, `paper_formalizacao/out_cap12_full`, `paper_formalizacao/out_cap13a_full_auto_hp` e similares.
+## Nota de escopo
+O projeto busca explicar estrutura e limites do determinismo em series financeiras. Nao e um sistema de trade pronto.
